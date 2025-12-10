@@ -20,9 +20,21 @@ const router = createBrowserRouter([
         path: 'login',
         Component: Login
     },{
-        path: 'register',
-        Component: Register
-    }]
+  path: 'register',
+  Component: Register,
+  loader: async () => {
+    const districtsRes = await fetch(
+      'https://raw.githubusercontent.com/nuhil/bangladesh-geocode/refs/heads/master/districts/districts.json'
+    ).then(res => res.json());
+
+    const upazilasRes = await fetch(
+      'https://raw.githubusercontent.com/nuhil/bangladesh-geocode/refs/heads/master/upazilas/upazilas.json'
+    ).then(res => res.json());
+
+    return { LoadDistricts: districtsRes, LoadUpazilas: upazilasRes };
+  }
+}
+]
   }
 ]);
 

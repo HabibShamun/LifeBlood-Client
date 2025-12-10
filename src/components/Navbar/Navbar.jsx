@@ -1,7 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router';
 import logo from '../../assets/Untitled-design-2-removebg-preview(1).png'
+import useAuth from '../../hooks/useAuth';
 const Navbar = () => {
+    const {user,signOutUser}=useAuth()
     const links=
     <>
     <li><Link to={'/'}  className="text-xl text-gray-600 hover:text-primary">Home</Link></li>
@@ -10,6 +12,9 @@ const Navbar = () => {
     <li><Link className='text-xl text-gray-600 hover:text-primary'>Funding</Link></li>
     
     </>
+    const logOut=()=>{
+        signOutUser()
+    }
     return (
      <div className="navbar bg-base-100 shadow-sm p-5">
   <div className="navbar-start">
@@ -38,9 +43,13 @@ const Navbar = () => {
     </ul>
   </div>
   <div className="navbar-end">
-  <Link to={'/register'} className="btn hidden sm:block btn-primary font-bold text-white px-6 py-3 normal-case leading-none">
+{
+user?  <button onClick={logOut} className="btn hidden sm:block btn-primary font-bold text-white px-6 py-3 normal-case leading-none">
+  Log Out
+</button> :<Link to={'/register'} className="btn hidden sm:block btn-primary font-bold text-white px-6 py-3 normal-case leading-none">
   Register as Donor
 </Link>
+}
   </div>
 </div>
     );
