@@ -9,7 +9,7 @@ import useAxios from '../../hooks/useAxios';
 
 const Register = () => {
   
-  const { handleSubmit, register,control } = useForm();
+  const { handleSubmit, register,control , formState:{errors}} = useForm();
   const { LoadDistricts, LoadUpazilas } = useLoaderData();
     const districts=LoadDistricts[2].data
     const upazilas=LoadUpazilas[2].data
@@ -45,7 +45,7 @@ const Register = () => {
                     if(res.data.insertedId) {
                         console.log('user was created in the db')
                     }
-                })
+                }).catch(e=>console.log(e))
 
 
                 const userProfile={
@@ -56,7 +56,7 @@ const Register = () => {
                 .then(()=>{
 
                 }).catch(e=>console.log(e))
-         })
+         }).catch(e=>console.log(e))
         })
   };
 
@@ -84,47 +84,91 @@ const Register = () => {
         <fieldset className="fieldset">
           {/* name */}
           <label className="label">Name</label>
-          <input {...register('userName')} type="text" className="input w-auto" placeholder="Name" />
+          <input {...register('userName', {required:true})} type="text" className="input w-auto" placeholder="Name" />
+  {
+    errors.userName?.type==='userName' && <p className='text-red-500'>Name is Required</p>
+  }
+
+
 
           {/* photo */}
           <label className="label">Photo</label>
-        <input {...register('photo')} type="file" className="file-input" />
+        <input {...register('photo', {required:true})} type="file" className="file-input" />
+  {
+    errors.photo?.type==='photo' && <p className='text-red-500'>Name is Required</p>
+  }  
+   
+   
           {/* email */}
           <label className="label">Email</label>
-          <input {...register('email')} type="email" className="input w-auto" placeholder="Email" />
+          <input {...register('email', {required:true})} type="email" className="input w-auto" placeholder="Email" />
 
+ {
+    errors.email?.type==='email' && <p className='text-red-500'>Name is Required</p>
+  }  
+  
+  
           {/* password */}
           <label className="label">Password</label>
-          <input {...register('password')} type="password" className="input w-auto" placeholder="Password" />
+          <input {...register('password', {required:true,
+            minLength:6,
+            pattern:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$/
+
+          },)} type="password" className="input w-auto" placeholder="Password" />
+{errors.password?.type === 'required' && <p className='text-red-500'>Password is required</p>}
+{errors.password?.type === 'minLength' && <p className='text-red-500'>Password must be at least 6 characters</p>}
+{errors.password?.type === 'pattern' && <p className='text-red-500'>Password must contain uppercase, lowercase, and a number</p>}
+  
     {/* password */}
           {/* <label className="label">Confirm Password</label>
           <input  type="password" className="input w-auto" placeholder="Password" /> */}
 
+    
+    
+    
+    
           {/* phone number */}
           <label className="label">Phone Number</label>
-          <input {...register('phoneNumber')} type="tel" className="input w-auto" placeholder="Phone Number" />
-
+          <input {...register('phoneNumber', {required:true})} type="tel" className="input w-auto" placeholder="Phone Number" />
+ {
+    errors.phoneNumber?.type==='phoneNumber' && <p className='text-red-500'>Name is Required</p>
+  }
+     
+     
+     
+     
           {/* district */}
           <label className="label">District</label>
-          <select {...register('district')} className="select w-auto">
+          <select {...register('district', {required:true})} className="select w-auto">
         {
             districts.map(district=>    <option key={district.id} value={district.id} >{district.name}</option>)
         }
           </select>
+ {
+    errors.district?.type==='district' && <p className='text-red-500'>Name is Required</p>
+  }
+
+
 
           {/* upazila */}
           <label className="label">Upazila</label>
           <option disabled={true}>Pick a District</option>
-          <select {...register('upazila')} className="select w-auto">
+          <select {...register('upazila', {required:true})} className="select w-auto">
            {
            
               handleUpazila(district).map((up,i)=> <option key={i}>{up.name}</option>)
            }
           </select>
 
+ {
+    errors.upazila?.type==='upazila' && <p className='text-red-500'>Name is Required</p>
+  }
+
+
+
           {/* blood type */}
           <label className="label">Blood Type</label>
-          <select {...register('bloodType')} className="select w-auto">
+          <select {...register('bloodType', {required:true})} className="select w-auto">
             <option>A+</option>
             <option>A-</option>
             <option>B+</option>
@@ -134,10 +178,22 @@ const Register = () => {
             <option>O+</option>
             <option>O-</option>
           </select>
+ {
+    errors.bloodType?.type==='bloodType' && <p className='text-red-500'>Name is Required</p>
+  }
+
+
+
 
           {/* address */}
           <label className="label">Address</label>
-          <input {...register('address')} type="text" className="input w-auto" placeholder="Your current address" />
+          <input {...register('address', {required:true})} type="text" className="input w-auto" placeholder="Your current address" />
+ {
+    errors.address?.type==='address' && <p className='text-red-500'>Name is Required</p>
+  }
+
+
+
 
           <button className="btn btn-primary text-white my-4">Register</button>
         </fieldset>

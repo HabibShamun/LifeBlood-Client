@@ -24,7 +24,7 @@ const Login = () => {
           <label className="label">Email</label>
           <input {...register('email')} type="email" className="input" placeholder="Email" />
           <label className="label">Password</label>
-          <input {...register('passsword')} type="password" className="input" placeholder="Password" />
+          <input {...register('password')} type="password" className="input" placeholder="Password" />
           <div><a className="link link-hover">Forgot password?</a></div>
           <button className="btn btn-primary text-white my-4">Login</button>
         </fieldset>

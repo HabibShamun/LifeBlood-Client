@@ -5,6 +5,8 @@ import Home from '../pages/Home.jsx/Home';
 import AuthLayout from '../layouts/AuthLayout';
 import Login from '../pages/Login/Login';
 import Register from '../pages/Register/Register';
+import DashboardLayout from '../layouts/DashboardLayout';
+import DashBoardHome from '../pages/DashBoard/DashBoardHome/DashBoardHome';
 const router = createBrowserRouter([
   {
     path: "/",
@@ -35,6 +37,13 @@ const router = createBrowserRouter([
   }
 }
 ]
+  },{
+    path:'dashboard',
+    Component: DashboardLayout,
+    children:[{
+        path:'/dashboard',
+        Component: DashBoardHome
+    }]
   }
 ]);
 
