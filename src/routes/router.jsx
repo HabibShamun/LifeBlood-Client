@@ -12,6 +12,7 @@ import RequestDonation from '../pages/Home.jsx/RequestDonation/RequestDonation';
 import Funding from '../pages/Funding/Funding';
 import SearchDonors from '../pages/Home.jsx/SearchDonors/SearchDonors';
 import AllDonationRequests from '../pages/DashBoard/AllDonationRequests/AllDonationRequests';
+import UserManageMent from '../pages/DashBoard/UserManageMent/UserManageMent';
 
 const router = createBrowserRouter([
   {
@@ -77,6 +78,9 @@ const router = createBrowserRouter([
 {
   path: 'allDonationRequests',
   Component: AllDonationRequests
+},{
+  path: 'userManagement',
+  Component: UserManageMent
 }
 ]
   }

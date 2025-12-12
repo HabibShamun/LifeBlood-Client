@@ -79,7 +79,7 @@ const DashboardLayout = () => {
         </li>
 
             <li>
-          <Link to={'/requestDonation'} className="is-drawer-close:tooltip is-drawer-close:tooltip-right" data-tip="Users">
+          <Link to={'/dashboard/userManagement'} className="is-drawer-close:tooltip is-drawer-close:tooltip-right" data-tip="Users">
             {/* Progile icon */}
            <FaUsers className='text-2xl'/>
             <span className="ml-2 hidden group-hover:inline">Users</span>
