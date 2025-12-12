@@ -3,7 +3,9 @@ import React from 'react';
 const DashBoardHome = () => {
     return (
         <div>
-            DashBoard Home
+            DashBoard Home <br />
+            3 most recent donations <br />
+            view my requests
         </div>
     );
 };

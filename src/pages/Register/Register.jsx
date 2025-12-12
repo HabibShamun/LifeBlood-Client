@@ -9,7 +9,14 @@ import useAxios from '../../hooks/useAxios';
 
 const Register = () => {
   
-  const { handleSubmit, register,control , formState:{errors}} = useForm();
+    const {
+    register,
+    handleSubmit,
+    control,
+    watch,
+    formState: { errors },
+  } = useForm();
+  const password = watch("password");
   const { LoadDistricts, LoadUpazilas } = useLoaderData();
     const districts=LoadDistricts[2].data
     const upazilas=LoadUpazilas[2].data
@@ -17,6 +24,7 @@ const Register = () => {
     const Axios=useAxios()
   const handleRegister = (data) => {
     console.log(data)
+    const district = districts.find(d=>d.id===data.district)
       const profileImg=data.photo[0]
       console.log(profileImg)
         registerUser(data.email,data.password).then((res)=>{
@@ -37,7 +45,7 @@ const Register = () => {
                     displayName:data.userName,
                      photoURL:photoURL,
                      bloodType:data.bloodType,
-                     district:data.district,
+                     district:district.name,
                      upazila:data.upazila
                 }
 
@@ -108,22 +116,52 @@ const Register = () => {
   }  
   
   
-          {/* password */}
-          <label className="label">Password</label>
-          <input {...register('password', {required:true,
-            minLength:6,
-            pattern:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$/
+{/* Password */}
+      <div className="form-control">
+        <label className="label">Password</label>
+        <input
+          {...register("password", {
+            required: true,
+            minLength: 6,
+            pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$/,
+          })}
+          type="password"
+          className="input input-bordered w-full"
+          placeholder="Password"
+        />
+        {errors.password?.type === "required" && (
+          <p className="text-red-500">Password is required</p>
+        )}
+        {errors.password?.type === "minLength" && (
+          <p className="text-red-500">
+            Password must be at least 6 characters
+          </p>
+        )}
+        {errors.password?.type === "pattern" && (
+          <p className="text-red-500">
+            Password must contain uppercase, lowercase, and a number
+          </p>
+        )}
+      </div>
 
-          },)} type="password" className="input w-auto" placeholder="Password" />
-{errors.password?.type === 'required' && <p className='text-red-500'>Password is required</p>}
-{errors.password?.type === 'minLength' && <p className='text-red-500'>Password must be at least 6 characters</p>}
-{errors.password?.type === 'pattern' && <p className='text-red-500'>Password must contain uppercase, lowercase, and a number</p>}
-  
-    {/* password */}
-          {/* <label className="label">Confirm Password</label>
-          <input  type="password" className="input w-auto" placeholder="Password" /> */}
+      {/* Confirm Password */}
+      <div className="form-control">
+        <label className="label">Confirm Password</label>
+        <input
+          {...register("confirmPassword", {
+            required: true,
+            validate: (value) =>
+              value === password || "Passwords do not match",
+          })}
+          type="password"
+          className="input input-bordered w-full"
+          placeholder="Confirm Password"
+        />
+        {errors.confirmPassword && (
+          <p className="text-red-500">{errors.confirmPassword.message}</p>
+        )}
+      </div>
 
-    
     
     
     

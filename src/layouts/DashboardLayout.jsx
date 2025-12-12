@@ -1,6 +1,12 @@
 import React from 'react';
 import { Link, Outlet } from 'react-router';
 import logo from '../assets/Untitled-design-2-removebg-preview(1).png'
+import { MdOutlineBloodtype, MdOutlineDashboard } from 'react-icons/md';
+import { CgUser } from 'react-icons/cg';
+import { IoHomeOutline } from 'react-icons/io5';
+import { BiDonateBlood, BiDonateHeart } from 'react-icons/bi';
+import { FaUsers } from 'react-icons/fa';
+import { RiRefund2Fill } from 'react-icons/ri';
 const DashboardLayout = () => {
     return (
      <div className="drawer lg:drawer-open">
@@ -26,23 +32,80 @@ const DashboardLayout = () => {
       <ul className="menu w-full grow">
         {/* List item */}
         <li>
-            <Link className='bg-white max-w-15' to={'/'}><img src={logo} alt="" /></Link>
+            <Link className=' max-w-15' to={'/'}><img src={logo} alt="" /></Link>
         </li>
-        <li>
-          <Link to={'/dashboard'} className="is-drawer-close:tooltip is-drawer-close:tooltip-right" data-tip="Homepage">
-            {/* Home icon */}
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" strokeLinejoin="round" strokeLinecap="round" strokeWidth="2" fill="none" stroke="currentColor" className="my-1.5 inline-block size-4"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"></path><path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg>
-            <span className="ml-2 hidden group-hover:inline">Homepage</span>
+
+        
+           <li>
+          <Link to={'/dashboard'} className="is-drawer-close:tooltip is-drawer-close:tooltip-right" data-tip="Main">
+            {/* Main icon */}
+           <MdOutlineDashboard className='text-2xl'></MdOutlineDashboard>
+            <span className="ml-2 hidden group-hover:inline">Main</span>
           </Link>
         </li>
 
-        {/* List item */}
+                 <li>
+          <Link to={'/dashboard/profile'} className="is-drawer-close:tooltip is-drawer-close:tooltip-right" data-tip="Profile">
+            {/* Progile icon */}
+           <CgUser className='text-2xl'></CgUser>
+            <span className="ml-2 hidden group-hover:inline">Profile</span>
+          </Link>
+        </li>
+
+                  <li>
+          <Link to={'/requestDonation'} className="is-drawer-close:tooltip is-drawer-close:tooltip-right" data-tip="Request Blood">
+            {/* Progile icon */}
+           <MdOutlineBloodtype className='text-2xl'/>
+            <span className="ml-2 hidden group-hover:inline">Request Blood</span>
+          </Link>
+        </li>
+{/* volunteer */}
+          <li>
+          <Link to={'/requestDonation'} className="is-drawer-close:tooltip is-drawer-close:tooltip-right" data-tip="Request Assigned">
+            {/* Progile icon */}
+           <BiDonateBlood className='text-2xl'/>
+            <span className="ml-2 hidden group-hover:inline">Request Assigned</span>
+          </Link>
+        </li>
+
+{/* admin */}
+
+          <li>
+          <Link to={'/dashboard/allDonationRequests'} className="is-drawer-close:tooltip is-drawer-close:tooltip-right" data-tip="All Donation Request">
+            {/* Progile icon */}
+           <BiDonateHeart className='text-2xl'/>
+            <span className="ml-2 hidden group-hover:inline">All Donation Request</span>
+          </Link>
+        </li>
+
+            <li>
+          <Link to={'/requestDonation'} className="is-drawer-close:tooltip is-drawer-close:tooltip-right" data-tip="Users">
+            {/* Progile icon */}
+           <FaUsers className='text-2xl'/>
+            <span className="ml-2 hidden group-hover:inline">Users</span>
+          </Link>
+        </li>
+
+          <li>
+          <Link to={'/requestDonation'} className="is-drawer-close:tooltip is-drawer-close:tooltip-right" data-tip="Funding">
+            {/* Progile icon */}
+           <RiRefund2Fill className='text-2xl'/>
+            <span className="ml-2 hidden group-hover:inline">Funding</span>
+          </Link>
+        </li>
+
+
+
+
+
+{/* go bak to Home */}
+
         <li>
-          <button className="is-drawer-close:tooltip is-drawer-close:tooltip-right" data-tip="Settings">
-            {/* Settings icon */}
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" strokeLinejoin="round" strokeLinecap="round" strokeWidth="2" fill="none" stroke="currentColor" className="my-1.5 inline-block size-4"><path d="M20 7h-9"></path><path d="M14 17H5"></path><circle cx="17" cy="17" r="3"></circle><circle cx="7" cy="7" r="3"></circle></svg>
-            <span className="ml-2 hidden group-hover:inline">Setting</span>
-          </button>
+          <Link to={'/'} className="is-drawer-close:tooltip is-drawer-close:tooltip-right" data-tip="Homepage">
+            {/* Home icon */}
+           <IoHomeOutline className='text-2xl'></IoHomeOutline>
+            <span className="ml-2 hidden group-hover:inline">Homepage</span>
+          </Link>
         </li>
       </ul>
     </div>
