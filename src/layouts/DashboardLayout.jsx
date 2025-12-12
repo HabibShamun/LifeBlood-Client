@@ -61,10 +61,10 @@ const DashboardLayout = () => {
         </li>
 {/* volunteer */}
           <li>
-          <Link to={'/requestDonation'} className="is-drawer-close:tooltip is-drawer-close:tooltip-right" data-tip="Request Assigned">
+          <Link to={'/requestDonation'} className="is-drawer-close:tooltip is-drawer-close:tooltip-right" data-tip="My Donations">
             {/* Progile icon */}
            <BiDonateBlood className='text-2xl'/>
-            <span className="ml-2 hidden group-hover:inline">Request Assigned</span>
+            <span className="ml-2 hidden group-hover:inline">My Donations</span>
           </Link>
         </li>
 
