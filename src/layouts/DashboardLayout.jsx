@@ -61,7 +61,7 @@ const DashboardLayout = () => {
         </li>
 {/* volunteer */}
           <li>
-          <Link to={'/requestDonation'} className="is-drawer-close:tooltip is-drawer-close:tooltip-right" data-tip="My Donations">
+          <Link to={'/dashboard/myDonation'} className="is-drawer-close:tooltip is-drawer-close:tooltip-right" data-tip="My Donations">
             {/* Progile icon */}
            <BiDonateBlood className='text-2xl'/>
             <span className="ml-2 hidden group-hover:inline">My Donations</span>
@@ -87,7 +87,7 @@ const DashboardLayout = () => {
         </li>
 
           <li>
-          <Link to={'/requestDonation'} className="is-drawer-close:tooltip is-drawer-close:tooltip-right" data-tip="Funding">
+          <Link to={'/funding'} className="is-drawer-close:tooltip is-drawer-close:tooltip-right" data-tip="Funding">
             {/* Progile icon */}
            <RiRefund2Fill className='text-2xl'/>
             <span className="ml-2 hidden group-hover:inline">Funding</span>

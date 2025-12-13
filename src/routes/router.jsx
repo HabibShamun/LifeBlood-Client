@@ -13,6 +13,9 @@ import Funding from '../pages/Funding/Funding';
 import SearchDonors from '../pages/Home.jsx/SearchDonors/SearchDonors';
 import AllDonationRequests from '../pages/DashBoard/AllDonationRequests/AllDonationRequests';
 import UserManageMent from '../pages/DashBoard/UserManageMent/UserManageMent';
+import SuccesfullyDonated from '../pages/Funding/SuccesfullyDonated';
+import Unsuccessful from '../pages/Funding/Unsuccessful';
+import MyDonation from '../pages/DashBoard/MyDonation/MyDonation';
 
 const router = createBrowserRouter([
   {
@@ -39,6 +42,13 @@ const router = createBrowserRouter([
       path: 'funding',
       Component: Funding
     },{
+     path: 'successfulDonation',
+     Component:SuccesfullyDonated 
+    },{
+      path: 'unsuccessful',
+      Component: Unsuccessful
+    },
+      {
       path: 'searchDonors',
       Component: SearchDonors
     }]
@@ -81,6 +91,9 @@ const router = createBrowserRouter([
 },{
   path: 'userManagement',
   Component: UserManageMent
+},{
+  path: 'myDonation',
+  Component: MyDonation
 }
 ]
   }
