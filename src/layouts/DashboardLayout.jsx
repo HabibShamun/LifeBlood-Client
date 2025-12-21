@@ -7,7 +7,10 @@ import { IoHomeOutline } from 'react-icons/io5';
 import { BiDonateBlood, BiDonateHeart } from 'react-icons/bi';
 import { FaUsers } from 'react-icons/fa';
 import { RiRefund2Fill } from 'react-icons/ri';
+import AdminRoute from '../routes/AdminRoute';
+import useRole from '../hooks/useRole';
 const DashboardLayout = () => {
+  const {role}=useRole()
     return (
      <div className="drawer lg:drawer-open">
   <input id="my-drawer-4" type="checkbox" className="drawer-toggle" />
@@ -53,7 +56,7 @@ const DashboardLayout = () => {
         </li>
 
                   <li>
-          <Link to={'/requestDonation'} className="is-drawer-close:tooltip is-drawer-close:tooltip-right" data-tip="Request Blood">
+          <Link to={'/dashboard/dashboardCreateRequest'} className="is-drawer-close:tooltip is-drawer-close:tooltip-right" data-tip="Request Blood">
             {/* Progile icon */}
            <MdOutlineBloodtype className='text-2xl'/>
             <span className="ml-2 hidden group-hover:inline">Request Blood</span>
@@ -64,7 +67,7 @@ const DashboardLayout = () => {
           <Link to={'/dashboard/myDonation'} className="is-drawer-close:tooltip is-drawer-close:tooltip-right" data-tip="My Donations">
             {/* Progile icon */}
            <BiDonateBlood className='text-2xl'/>
-            <span className="ml-2 hidden group-hover:inline">My Donations</span>
+            <span className="ml-2 hidden group-hover:inline">My Fundings</span>
           </Link>
         </li>
 
@@ -78,7 +81,9 @@ const DashboardLayout = () => {
           </Link>
         </li>
 
-            <li>
+{
+role==='admin' &&
+                <li>
           <Link to={'/dashboard/userManagement'} className="is-drawer-close:tooltip is-drawer-close:tooltip-right" data-tip="Users">
             {/* Progile icon */}
            <FaUsers className='text-2xl'/>
@@ -86,8 +91,10 @@ const DashboardLayout = () => {
           </Link>
         </li>
 
+}
+
           <li>
-          <Link to={'/funding'} className="is-drawer-close:tooltip is-drawer-close:tooltip-right" data-tip="Funding">
+          <Link to={'/dashboard/dashboardFunding'} className="is-drawer-close:tooltip is-drawer-close:tooltip-right" data-tip="Funding">
             {/* Progile icon */}
            <RiRefund2Fill className='text-2xl'/>
             <span className="ml-2 hidden group-hover:inline">Funding</span>

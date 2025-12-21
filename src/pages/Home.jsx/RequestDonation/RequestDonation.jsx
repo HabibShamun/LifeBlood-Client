@@ -1,11 +1,11 @@
 import React from 'react';
 import logo from '../../../assets/Untitled-design-2-removebg-preview(1).png'
 import { useForm, useWatch } from 'react-hook-form';
-import { useLoaderData } from 'react-router';
+import { useLoaderData, useNavigate } from 'react-router';
 import useAuth from '../../../hooks/useAuth';
 import useAxiosSecure from '../../../hooks/useAxiosSecure';
 const RequestDonation = () => {
-
+  const navigate=useNavigate()
     const axiosSecure=useAxiosSecure()
     const {user}=useAuth()
       const {

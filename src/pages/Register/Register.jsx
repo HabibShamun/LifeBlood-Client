@@ -46,7 +46,9 @@ const Register = () => {
                      photoURL:photoURL,
                      bloodType:data.bloodType,
                      district:district.name,
-                     upazila:data.upazila
+                     upazila:data.upazila,
+                     address:data.address,
+                     phoneNumber:data.phoneNumber
                 }
 
                 Axios.post('/users',userInfo).then(res=>{

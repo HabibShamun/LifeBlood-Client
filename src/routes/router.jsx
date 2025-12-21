@@ -16,6 +16,12 @@ import UserManageMent from '../pages/DashBoard/UserManageMent/UserManageMent';
 import SuccesfullyDonated from '../pages/Funding/SuccesfullyDonated';
 import Unsuccessful from '../pages/Funding/Unsuccessful';
 import MyDonation from '../pages/DashBoard/MyDonation/MyDonation';
+import EditDonation from '../pages/DashBoard/AllDonationRequests/EditDonation';
+import DonateBlood from '../pages/DonateBlood/DonateBlood';
+import FundingDetails from '../pages/DashBoard/MyDonation/FundingDetails';
+import AdminRoute from './AdminRoute';
+import PrivateRoute from './PrivateRoute';
+import ActualRequests from '../pages/ActualRequests/ActualRequests';
 
 const router = createBrowserRouter([
   {
@@ -25,8 +31,16 @@ const router = createBrowserRouter([
         index: true,
         Component: Home
     },{
+
+      path: 'donateBlood/:id',
+      element: <PrivateRoute>
+        <DonateBlood></DonateBlood>
+      </PrivateRoute>
+    },{
       path:'requestDonation',
-      Component: RequestDonation,
+      element: <PrivateRoute>
+        <RequestDonation></RequestDonation>
+      </PrivateRoute>,
         loader: async () => {
     const districtsRes = await fetch(
       'https://raw.githubusercontent.com/nuhil/bangladesh-geocode/refs/heads/master/districts/districts.json'
@@ -39,18 +53,35 @@ const router = createBrowserRouter([
     return { LoadDistricts: districtsRes, LoadUpazilas: upazilasRes };
   }
     },{
+      path: 'allRequests',
+      Component: ActualRequests
+    },{
       path: 'funding',
-      Component: Funding
+      element: <Funding></Funding>
+  
     },{
      path: 'successfulDonation',
-     Component:SuccesfullyDonated 
+     element:<SuccesfullyDonated></SuccesfullyDonated>
     },{
       path: 'unsuccessful',
-      Component: Unsuccessful
+      element: <Unsuccessful></Unsuccessful>
     },
       {
       path: 'searchDonors',
-      Component: SearchDonors
+      element: 
+        <SearchDonors></SearchDonors>
+  ,
+      loader: async () => {
+    const districtsRes = await fetch(
+      'https://raw.githubusercontent.com/nuhil/bangladesh-geocode/refs/heads/master/districts/districts.json'
+    ).then(res => res.json());
+
+    const upazilasRes = await fetch(
+      'https://raw.githubusercontent.com/nuhil/bangladesh-geocode/refs/heads/master/upazilas/upazilas.json'
+    ).then(res => res.json());
+
+    return { LoadDistricts: districtsRes, LoadUpazilas: upazilasRes };
+  }
     }]
   },{
     path: '/',
@@ -79,21 +110,72 @@ const router = createBrowserRouter([
     Component: DashboardLayout,
     children:[{
        index: true,
-        Component: DashBoardHome
+       element:
+       <PrivateRoute><DashBoardHome></DashBoardHome></PrivateRoute>
+       
+    },
+    {
+      path: 'dashboardCreateRequest',
+      element: <PrivateRoute>
+        <RequestDonation></RequestDonation>
+      </PrivateRoute>,
+      loader: async () => {
+    const districtsRes = await fetch(
+      'https://raw.githubusercontent.com/nuhil/bangladesh-geocode/refs/heads/master/districts/districts.json'
+    ).then(res => res.json());
+
+    const upazilasRes = await fetch(
+      'https://raw.githubusercontent.com/nuhil/bangladesh-geocode/refs/heads/master/upazilas/upazilas.json'
+    ).then(res => res.json());
+
+    return { LoadDistricts: districtsRes, LoadUpazilas: upazilasRes };
+  }
+    },
+    {
+      path:'dashboardFunding',
+      element:<PrivateRoute>
+        <Funding></Funding>
+      </PrivateRoute>
     },
 {
     path:'profile',
-    Component: Profile
+    element: <PrivateRoute>
+      <Profile></Profile>
+    </PrivateRoute>
 },
 {
   path: 'allDonationRequests',
-  Component: AllDonationRequests
+  element: <PrivateRoute>
+    <AllDonationRequests></AllDonationRequests>
+  </PrivateRoute>
+},{
+  path:'editDonation/:id',
+  element:<PrivateRoute><EditDonation></EditDonation></PrivateRoute>,
+          loader: async () => {
+    const districtsRes = await fetch(
+      'https://raw.githubusercontent.com/nuhil/bangladesh-geocode/refs/heads/master/districts/districts.json'
+    ).then(res => res.json());
+
+    const upazilasRes = await fetch(
+      'https://raw.githubusercontent.com/nuhil/bangladesh-geocode/refs/heads/master/upazilas/upazilas.json'
+    ).then(res => res.json());
+
+    return { LoadDistricts: districtsRes, LoadUpazilas: upazilasRes };
+  }
 },{
   path: 'userManagement',
-  Component: UserManageMent
+  element: <AdminRoute>
+    <UserManageMent></UserManageMent>
+  </AdminRoute>
 },{
   path: 'myDonation',
-  Component: MyDonation
+ element: <PrivateRoute>
+
+  <MyDonation></MyDonation>
+ </PrivateRoute>
+},{
+  path:'fundingDetails/:id',
+  element:<PrivateRoute><FundingDetails></FundingDetails></PrivateRoute>
 }
 ]
   }

@@ -12,10 +12,21 @@ const Profile = () => {
   const { role } = useRole();
   const axiosSecure = useAxiosSecure();
 
+  // Fetch user info
   const { data: userinfo = {}, refetch } = useQuery({
     queryKey: ['user-info', user?.email],
     queryFn: async () => {
       const res = await axiosSecure.get(`/users/${user?.email}`);
+      return res.data;
+    },
+    enabled: !!user?.email,
+  });
+
+  // Fetch donation info
+  const { data: donationInfo = [] } = useQuery({
+    queryKey: ['donation-info', user?.email],
+    queryFn: async () => {
+      const res = await axiosSecure.get(`/bloodDonation/${user?.email}`);
       return res.data;
     },
     enabled: !!user?.email,
@@ -35,7 +46,7 @@ const Profile = () => {
   }, [userinfo, user, reset]);
 
   const handleUpdate = (data) => {
-    // 👉 You’ll implement this later
+    // 👉 implement backend update later
     console.log("Update called with:", data);
     setIsEditing(false);
     refetch();
@@ -45,6 +56,9 @@ const Profile = () => {
     reset(); // reset back to original values
     setIsEditing(false);
   };
+
+  // Safely get last donation
+  const lastDonation = donationInfo.length > 0 ? donationInfo[0].createdAt : null;
 
   return (
     <div className="pl-2 sm:pl-5 md:pl-20 lg:pl-30 pt-5">
@@ -62,8 +76,12 @@ const Profile = () => {
             />
           </figure>
           <div className="card-body items-center text-center">
-            <h2 className="card-title font-bold">{userinfo.displayName || user?.displayName}</h2>
-            <p className="mb-2 border-b border-gray-300 w-full text-center">{role}</p>
+            <h2 className="card-title font-bold">
+              {userinfo.displayName || user?.displayName}
+            </h2>
+            {
+              role==='admin' &&
+              <p className="mb-2 border-b border-gray-300 w-full text-center">{role}</p>}
             <div className="w-full space-y-2">
               <div className="flex justify-between">
                 <span className="font-medium text-gray-600">Blood Type</span>
@@ -71,11 +89,13 @@ const Profile = () => {
               </div>
               <div className="flex justify-between">
                 <span className="font-medium text-gray-600">Total Donation</span>
-                <span className="text-gray-800">{userinfo.totalDonation || 0}</span>
+                <span className="text-gray-800">{donationInfo.length || 0}</span>
               </div>
               <div className="flex justify-between">
                 <span className="font-medium text-gray-600">Last Donation</span>
-                <span className="text-gray-800">{userinfo.lastDonation || "NA"}</span>
+                <span className="text-gray-800">
+                  {lastDonation ? new Date(lastDonation).toLocaleString() : "NA"}
+                </span>
               </div>
             </div>
           </div>
@@ -104,47 +124,59 @@ const Profile = () => {
                   className="text-primary flex justify-center items-center gap-1 "
                   onClick={() => setIsEditing(true)}
                 >
-                  <FaRegEdit></FaRegEdit>
+                  <FaRegEdit />
                   Edit
                 </button>
               )}
             </div>
 
             <div className="form-control">
-              <label className="label"><span className="label-text font-medium">Name</span></label>
+              <label className="label">
+                <span className="label-text font-medium">Name</span>
+              </label>
               <input
                 type="text"
                 {...register("name")}
+                defaultValue={userinfo.displayName || user?.displayName || ""}
                 className="input input-bordered w-full"
                 disabled={!isEditing}
               />
             </div>
 
             <div className="form-control">
-              <label className="label"><span className="label-text font-medium">Email</span></label>
+              <label className="label">
+                <span className="label-text font-medium">Email</span>
+              </label>
               <input
                 type="email"
                 {...register("email")}
+                defaultValue={userinfo.email || user?.email || ""}
                 className="input input-bordered w-full"
-                disabled={!isEditing}
+                disabled // ✅ always disabled
               />
             </div>
 
             <div className="form-control">
-              <label className="label"><span className="label-text font-medium">Phone Number</span></label>
+              <label className="label">
+                <span className="label-text font-medium">Phone Number</span>
+              </label>
               <input
                 type="text"
                 {...register("phoneNumber")}
+                defaultValue={userinfo.phoneNumber || ""}
                 className="input input-bordered w-full"
                 disabled={!isEditing}
               />
             </div>
 
             <div className="form-control">
-              <label className="label"><span className="label-text font-medium">Address</span></label>
+              <label className="label">
+                <span className="label-text font-medium">Address</span>
+              </label>
               <input
                 type="text"
                 {...register("address")}
+                defaultValue={userinfo.address || ""}
                 className="input input-bordered w-full"
                 disabled={!isEditing}
               />
