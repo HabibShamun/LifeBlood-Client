@@ -6,7 +6,7 @@ This frontend is designed with a focus on **user experience, responsiveness, and
 ---
 
 ## 🌐 Live URL
-https://reliable-pasca-7aed7d.netlify.app/
+[https://reliable-pasca-7aed7d.netlify.app/](https://melodic-torrone-821cc7.netlify.app/)
 
 ---
 
