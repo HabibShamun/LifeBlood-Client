@@ -1,15 +1,15 @@
-import React, { useEffect, useState } from 'react';
-import logo from '../../assets/Untitled-design-2-removebg-preview(1).png'
-import { Link, useLoaderData } from 'react-router';
+import React, { useState } from 'react';
+import logo from '../../assets/Untitled-design-2-removebg-preview(1).png';
+import { Link, useLoaderData, useNavigate } from 'react-router'
 import { useForm, useWatch } from 'react-hook-form';
 import useAuth from '../../hooks/useAuth';
 import axios from 'axios';
 import useAxios from '../../hooks/useAxios';
-
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
 const Register = () => {
-  
-    const {
+  const navigate = useNavigate();
+  const {
     register,
     handleSubmit,
     control,
@@ -18,70 +18,52 @@ const Register = () => {
   } = useForm();
   const password = watch("password");
   const { LoadDistricts, LoadUpazilas } = useLoaderData();
-    const districts=LoadDistricts[2].data
-    const upazilas=LoadUpazilas[2].data
-    const {registerUser,updateUserProfile}=useAuth()
-    const Axios=useAxios()
-  const handleRegister = (data) => {
-    console.log(data)
-    const district = districts.find(d=>d.id===data.district)
-      const profileImg=data.photo[0]
-      console.log(profileImg)
-        registerUser(data.email,data.password).then((res)=>{
-    
-            const formData= new FormData()
-            formData.append('image',profileImg)
-            console.log(formData)
-         
-            const image_API_URL=`https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_image_host}`
+  const districts = LoadDistricts[2].data;
+  const upazilas = LoadUpazilas[2].data;
+  const { registerUser, updateUserProfile } = useAuth();
+  const Axios = useAxios();
 
-             axios.post(image_API_URL,formData)
-             .then(res=>{
-                console.log('after image uoload',res)
-                const photoURL=res.data.data.url
-                console.log(photoURL)
-               const userInfo={
-                    email:data.email,
-                    displayName:data.userName,
-                     photoURL:photoURL,
-                     bloodType:data.bloodType,
-                     district:district.name,
-                     upazila:data.upazila,
-                     address:data.address,
-                     phoneNumber:data.phoneNumber
-                }
+  const [showPass, setShowPass] = useState(false);
+  const [showConfirmPass, setShowConfirmPass] = useState(false);
 
-                Axios.post('/users',userInfo).then(res=>{
-                    if(res.data.insertedId) {
-                        console.log('user was created in the db')
-                    }
-                }).catch(e=>console.log(e))
+  const handleRegister = async (data) => {
+    try {
+      const district = districts.find(d => d.id === data.district);
+      const profileImg = data.photo[0];
 
+      // Register user in Firebase/Auth
+      await registerUser(data.email, data.password);
 
-                const userProfile={
-                                        displayName:data.userName,
-                     photoURL:photoURL
-                }
-                updateUserProfile(userProfile)
-                .then(()=>{
+      // Upload image
+      const formData = new FormData();
+      formData.append('image', profileImg);
+      const image_API_URL = `https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_image_host}`;
+      const imgRes = await axios.post(image_API_URL, formData);
+      const photoURL = imgRes.data.data.url;
 
-                }).catch(e=>console.log(e))
-         }).catch(e=>console.log(e))
-        })
+      // Save user in DB
+      const userInfo = {
+        email: data.email,
+        displayName: data.userName,
+        photoURL,
+        bloodType: data.bloodType,
+        district: district.name,
+        upazila: data.upazila,
+        address: data.address,
+        phoneNumber: data.phoneNumber,
+      };
+      await Axios.post('/users', userInfo);
+
+      // Update profile
+      await updateUserProfile({ displayName: data.userName, photoURL });
+      navigate('/');
+    } catch (error) {
+      console.error(error);
+    }
   };
 
-  
-
-
-  const district=useWatch({control, name:'district'})
-
-  const handleUpazila=(district)=>{
-    const upazilaByDistrict=upazilas.filter(c=>c.district_id===district)
-    return upazilaByDistrict
-  }
-
-
-
+  const district = useWatch({ control, name: 'district' });
+  const handleUpazila = (districtId) => upazilas.filter(c => c.district_id === districtId);
 
   return (
     <div className="card bg-base-100 w-full max-w-lg mx-auto my-10 shrink-0 shadow">
@@ -92,153 +74,100 @@ const Register = () => {
 
       <form onSubmit={handleSubmit(handleRegister)} className="card-body">
         <fieldset className="fieldset">
-          {/* name */}
+          {/* Name */}
           <label className="label">Name</label>
-          <input {...register('userName', {required:true})} type="text" className="input w-auto" placeholder="Name" />
-  {
-    errors.userName?.type==='userName' && <p className='text-red-500'>Name is Required</p>
-  }
+          <input {...register('userName', { required: 'Name is required' })} type="text" className="input input-bordered w-full" placeholder="Name" />
+          {errors.userName && <p className="text-red-500">{errors.userName.message}</p>}
 
-
-
-          {/* photo */}
+          {/* Photo */}
           <label className="label">Photo</label>
-        <input {...register('photo', {required:true})} type="file" className="file-input" />
-  {
-    errors.photo?.type==='photo' && <p className='text-red-500'>Name is Required</p>
-  }  
-   
-   
-          {/* email */}
+          <input {...register('photo', { required: 'Photo is required' })} type="file" className="file-input w-full" />
+          {errors.photo && <p className="text-red-500">{errors.photo.message}</p>}
+
+          {/* Email */}
           <label className="label">Email</label>
-          <input {...register('email', {required:true})} type="email" className="input w-auto" placeholder="Email" />
+          <input {...register('email', { required: 'Email is required' })} type="email" className="input input-bordered w-full" placeholder="Email" />
+          {errors.email && <p className="text-red-500">{errors.email.message}</p>}
 
- {
-    errors.email?.type==='email' && <p className='text-red-500'>Name is Required</p>
-  }  
-  
-  
-{/* Password */}
-      <div className="form-control">
-        <label className="label">Password</label>
-        <input
-          {...register("password", {
-            required: true,
-            minLength: 6,
-            pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$/,
-          })}
-          type="password"
-          className="input input-bordered w-full"
-          placeholder="Password"
-        />
-        {errors.password?.type === "required" && (
-          <p className="text-red-500">Password is required</p>
-        )}
-        {errors.password?.type === "minLength" && (
-          <p className="text-red-500">
-            Password must be at least 6 characters
-          </p>
-        )}
-        {errors.password?.type === "pattern" && (
-          <p className="text-red-500">
-            Password must contain uppercase, lowercase, and a number
-          </p>
-        )}
-      </div>
+          {/* Password */}
+          <label className="label">Password</label>
+          <div className="relative w-full">
+            <input
+              {...register("password", {
+                required: "Password is required",
+                minLength: { value: 6, message: "Password must be at least 6 characters" },
+                pattern: { value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$/, message: "Password must contain uppercase, lowercase, and a number" }
+              })}
+              type={showPass ? 'text' : 'password'}
+              className="input input-bordered w-full pr-10"
+              placeholder="Password"
+            />
+            <span
+              className="absolute right-3 top-3 cursor-pointer text-gray-500"
+              onClick={() => setShowPass(!showPass)}
+            >
+              {showPass ? <FaEyeSlash /> : <FaEye />}
+            </span>
+          </div>
+          {errors.password && <p className="text-red-500">{errors.password.message}</p>}
 
-      {/* Confirm Password */}
-      <div className="form-control">
-        <label className="label">Confirm Password</label>
-        <input
-          {...register("confirmPassword", {
-            required: true,
-            validate: (value) =>
-              value === password || "Passwords do not match",
-          })}
-          type="password"
-          className="input input-bordered w-full"
-          placeholder="Confirm Password"
-        />
-        {errors.confirmPassword && (
-          <p className="text-red-500">{errors.confirmPassword.message}</p>
-        )}
-      </div>
+          {/* Confirm Password */}
+          <label className="label">Confirm Password</label>
+          <div className="relative w-full">
+            <input
+              {...register("confirmPassword", {
+                required: "Confirm Password is required",
+                validate: (value) => value === password || "Passwords do not match",
+              })}
+              type={showConfirmPass ? 'text' : 'password'}
+              className="input input-bordered w-full pr-10"
+              placeholder="Confirm Password"
+            />
+            <span
+              className="absolute right-3 top-3 cursor-pointer text-gray-500"
+              onClick={() => setShowConfirmPass(!showConfirmPass)}
+            >
+              {showConfirmPass ? <FaEyeSlash /> : <FaEye />}
+            </span>
+          </div>
+          {errors.confirmPassword && <p className="text-red-500">{errors.confirmPassword.message}</p>}
 
-    
-    
-    
-          {/* phone number */}
+          {/* Phone Number */}
           <label className="label">Phone Number</label>
-          <input {...register('phoneNumber', {required:true})} type="tel" className="input w-auto" placeholder="Phone Number" />
- {
-    errors.phoneNumber?.type==='phoneNumber' && <p className='text-red-500'>Name is Required</p>
-  }
-     
-     
-     
-     
-          {/* district */}
+          <input {...register('phoneNumber', { required: 'Phone number is required' })} type="tel" className="input input-bordered w-full" placeholder="Phone Number" />
+          {errors.phoneNumber && <p className="text-red-500">{errors.phoneNumber.message}</p>}
+
+          {/* District */}
           <label className="label">District</label>
-          <select {...register('district', {required:true})} className="select w-auto">
-        {
-            districts.map(district=>    <option key={district.id} value={district.id} >{district.name}</option>)
-        }
+          <select {...register('district', { required: 'District is required' })} className="select select-bordered w-full">
+            {districts.map(district => <option key={district.id} value={district.id}>{district.name}</option>)}
           </select>
- {
-    errors.district?.type==='district' && <p className='text-red-500'>Name is Required</p>
-  }
+          {errors.district && <p className="text-red-500">{errors.district.message}</p>}
 
-
-
-          {/* upazila */}
+          {/* Upazila */}
           <label className="label">Upazila</label>
-          <option disabled={true}>Pick a District</option>
-          <select {...register('upazila', {required:true})} className="select w-auto">
-           {
-           
-              handleUpazila(district).map((up,i)=> <option key={i}>{up.name}</option>)
-           }
+          <select {...register('upazila', { required: 'Upazila is required' })} className="select select-bordered w-full">
+            {handleUpazila(district).map((up, i) => <option key={i}>{up.name}</option>)}
           </select>
+          {errors.upazila && <p className="text-red-500">{errors.upazila.message}</p>}
 
- {
-    errors.upazila?.type==='upazila' && <p className='text-red-500'>Name is Required</p>
-  }
-
-
-
-          {/* blood type */}
+          {/* Blood Type */}
           <label className="label">Blood Type</label>
-          <select {...register('bloodType', {required:true})} className="select w-auto">
-            <option>A+</option>
-            <option>A-</option>
-            <option>B+</option>
-            <option>B-</option>
-            <option>AB+</option>
-            <option>AB-</option>
-            <option>O+</option>
-            <option>O-</option>
+          <select {...register('bloodType', { required: 'Blood type is required' })} className="select select-bordered w-full">
+            <option>A+</option><option>A-</option><option>B+</option><option>B-</option>
+            <option>AB+</option><option>AB-</option><option>O+</option><option>O-</option>
           </select>
- {
-    errors.bloodType?.type==='bloodType' && <p className='text-red-500'>Name is Required</p>
-  }
+          {errors.bloodType && <p className="text-red-500">{errors.bloodType.message}</p>}
 
-
-
-
-          {/* address */}
+          {/* Address */}
           <label className="label">Address</label>
-          <input {...register('address', {required:true})} type="text" className="input w-auto" placeholder="Your current address" />
- {
-    errors.address?.type==='address' && <p className='text-red-500'>Name is Required</p>
-  }
+          <input {...register('address', { required: 'Address is required' })} type="text" className="input input-bordered w-full" placeholder="Your current address" />
+          {errors.address && <p className="text-red-500">{errors.address.message}</p>}
 
-
-
-
-          <button className="btn btn-primary text-white my-4">Register</button>
+          <button className="btn btn-primary text-white my-4 w-full">Register</button>
         </fieldset>
         <p className="text-center text-gray-600 font-semibold">
-          Already have an Account? <Link to={'/login'} className="text-primary">Login</Link>
+          Already have an Account? <Link to="/login" className="text-primary">Login</Link>
         </p>
       </form>
     </div>

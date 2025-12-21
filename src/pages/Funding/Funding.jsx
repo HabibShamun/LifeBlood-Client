@@ -3,22 +3,39 @@ import logo from '../../assets/Untitled-design-2-removebg-preview(1).png';
 import useAxiosSecure from '../../hooks/useAxiosSecure';
 import useAuth from '../../hooks/useAuth';
 import useAxios from '../../hooks/useAxios';
+import Swal from 'sweetalert2';
 
 const Funding = () => {
-    const axiosSecure=useAxiosSecure()
-    const axios=useAxios()
-    const {user}=useAuth()
-  const handlePayment =async (balance) => {
-    console.log("Processing donation:", balance);
-    const fundingInfo={
-        funderName:user.displayName,
-        funderEmail:user.email,
-        donatedAmount:balance
-    }
-    const res =await axiosSecure.post('/create-checkout-session',fundingInfo)
-    console.log(res)
-    window.location.assign(res.data.url)
+  const axiosSecure = useAxiosSecure();
+  const axios = useAxios();
+  const { user } = useAuth();
 
+  const handlePayment = async (balance) => {
+    // Show confirmation alert
+    Swal.fire({
+      title: 'Confirm Donation',
+      text: `Do you want to continue with a donation of $${balance}?`,
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Yes, continue',
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          const fundingInfo = {
+            funderName: user.displayName,
+            funderEmail: user.email,
+            donatedAmount: balance,
+          };
+          const res = await axiosSecure.post('/create-checkout-session', fundingInfo);
+          window.location.assign(res.data.url);
+        } catch (error) {
+          console.error(error);
+          Swal.fire('Error', 'Something went wrong while processing your donation.', 'error');
+        }
+      }
+    });
   };
 
   const userAmount = [25, 50, 100, 250, 500];
@@ -32,9 +49,7 @@ const Funding = () => {
       {/* Hero Section */}
       <section className="w-full bg-primary py-20 px-4">
         <div className="max-w-6xl mx-auto text-center text-white">
-          <h1 className="text-4xl md:text-5xl  mb-4">
-            Support Our Mission
-          </h1>
+          <h1 className="text-4xl md:text-5xl mb-4">Support Our Mission</h1>
           <p className="text-base md:text-lg opacity-90">
             Your financial contribution helps us save more lives through blood donation programs.
           </p>
