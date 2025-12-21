@@ -6,7 +6,7 @@ This frontend is designed with a focus on **user experience, responsiveness, and
 ---
 
 ## 🌐 Live URL
-[Visit the Live Site]
+https://reliable-pasca-7aed7d.netlify.app/
 
 ---
 
